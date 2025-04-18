@@ -35,7 +35,7 @@ export default function ProfileZone(props: ProfileZoneProps) {
               uploadRef.current.querySelector("label").click();
           }}
         >
-          <img src={currentAvatar} alt={props.name} className={cn("w-full rounded-full object-contain z-50 hover:opacity-50 hover:blur-sm hover:backdrop-blur-sm")} onMouseOver={() => { setHover(true) }} onMouseOut={() => setHover(false)} />
+          <img src={imageUrl.length > 0 ? imageUrl: currentAvatar} alt={props.name} className={cn("w-full rounded-full object-contain z-50 hover:opacity-50 hover:blur-sm hover:backdrop-blur-sm")} onMouseOver={() => { setHover(true) }} onMouseOut={() => setHover(false)} />
           <UploadButton
             className="hidden"
             endpoint="imageUploader"
@@ -44,12 +44,12 @@ export default function ProfileZone(props: ProfileZoneProps) {
               console.log("Files: ", res);
               toast.success("Upload thành công");
               res.length > 0 && setImageUrl(res[0]?.url);
-              setUser({ ...user, image: res[0]?.url })
-
+              setUser({ id: session?.data?.user?.id, name: user.name ?? session?.data?.user?.name, image: res[0]?.url })
+              console.log(user)
+              setCurrentAvatar(res[0]?.url)
               const isSuccess = await UpdateAvatar({ url: res[0]?.url });
 
               if (isSuccess) {
-                setCurrentAvatar(imageUrl)
                 toast.success("Ảnh đại diện đã được cập nhật thành công")
               } else {
                 toast.error("Cập nhật ảnh đại diện thất bại, vui lòng thử lại")
